@@ -1,0 +1,97 @@
+﻿@model Personal_Finance_Manager.ViewModels.CreateTransactionViewModel
+
+@{
+    ViewData["Title"] = "Create Transaction";
+}
+
+<h2>Create Transaction</h2>
+
+<form asp-action="CreateTransaction" method="post">
+
+    <div asp-validation-summary="All"></div>
+
+    <input type="hidden" asp-for="AccountId" />
+
+    <div>
+        <label asp-for="TransactionDate"></label><br />
+        <input asp-for="TransactionDate"
+               type="date"
+               value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+        <br />
+        <span asp-validation-for="TransactionDate"></span>
+    </div>
+
+
+  
+
+    <br />
+
+    <div>
+        <label>Transaction Type</label><br />
+        <select asp-for="TransactionTypeId">
+            <option value="">Select</option>
+            <option value="1">Income</option>
+            <option value="2">Expense</option>
+            <option value="3">Transfer</option>
+        </select>
+        <br />
+        <span asp-validation-for="TransactionTypeId"></span>
+    </div>
+
+    <br />
+
+    <div>
+        <label asp-for="DestinationName"></label><br />
+        <input asp-for="DestinationName" />
+        <br />
+        <span asp-validation-for="DestinationName"></span>
+        <br />
+    </div>
+
+    <br />
+
+    <div>
+        <label asp-for="Amount"></label><br />
+        <input asp-for="Amount" step="0.01" />
+        <br />
+        <span asp-validation-for="Amount"></span>
+        <br />
+        <small>Must be a positive number.</small>
+    </div>
+
+    <br />
+
+     <br />
+
+    <div>
+        <label asp-for="Description"></label><br />
+        <input asp-for="Description" />
+        <br />
+        <span asp-validation-for="Description"></span>
+    </div>
+
+    <br />
+
+    <button type="submit">Create</button>
+    <a asp-action="Index" asp-route-accountId="@Model.AccountId">Cancel</a>
+
+</form>
+
+<style>
+    span {
+        color: red;
+    }
+
+    div[asp-validation-summary] {
+        color: red;
+        margin-bottom: 10px;
+    }
+
+    input, select {
+        width: 250px;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

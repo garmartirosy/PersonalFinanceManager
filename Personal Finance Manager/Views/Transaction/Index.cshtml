@@ -1,0 +1,153 @@
+﻿@model IEnumerable<Transaction>
+
+@{
+
+    ViewData["Title"] = "Transactions";
+
+    var currentAccountId = ViewData["currentAccountId"];
+}
+
+<h2>Transactions</h2>
+
+@if ((ViewData["HasUndo"] as bool?) ?? false)
+{
+    <form asp-action="UndoLast"
+          asp-controller="Transaction"
+          method="post"
+          style="display:inline;">
+
+        @if (currentAccountId != null)
+        {
+            <input type="hidden" name="accountId" value="@currentAccountId" />
+        }
+
+        <button type="submit" class="btn">
+            Undo Last
+        </button>
+    </form>
+
+    <br />
+    <br />
+}
+
+@if (!Model.Any())
+{
+    <p>No Transactions.</p>
+}
+else
+{
+    <table class="txTable">
+
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Action</th>
+        </tr>
+
+        @foreach (var t in Model)
+        {
+            <tr>
+                <td>@t.DateCreated.ToString("yyyy-MM-dd")</td>
+                <td>@t.Description</td>
+
+                <td class="amount @(t.Amount < 0 ? "neg" : "pos")">
+                    @t.Amount.ToString("C")
+                </td>
+
+                <td>
+                    <form asp-action="DeleteTransaction"
+                          asp-controller="Transaction"
+                          method="post"
+                          onsubmit="return confirm('Delete this transaction?');">
+
+                        <input type="hidden" name="transactionId" value="@t.Id" />
+                        <input type="hidden" name="accountId" value="@t.AccountId" />
+
+                        <button type="submit" class="btn small">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+<br />
+
+@if (currentAccountId != null)
+{
+    <div style="margin-bottom: 12px;">
+        <a asp-controller="Transaction"
+           asp-action="CreateTransaction"
+           asp-route-accountId="@currentAccountId"
+           class="btn">
+            + Create Transaction
+        </a>
+    </div>
+}
+
+
+<a class="link"
+   href="/Transaction/Export?accountId=@currentAccountId&type=csv">
+    Download CSV
+</a>
+
+<br />
+
+<a class="link"
+   href="/Transaction/Export?accountId=@currentAccountId&type=json">
+    Download JSON
+</a>
+
+
+<style>
+
+    .txTable {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 700px;
+    }
+
+        .txTable th {
+            background-color: #eee;
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .txTable td {
+            border: 1px solid #ccc;
+            padding: 6px;
+        }
+
+    .amount {
+        text-align: right;
+        font-weight: 500;
+    }
+
+    .neg {
+        color: darkred;
+    }
+
+    .pos {
+        color: darkgreen;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        border: 1px solid #999;
+        background-color: #f2f2f2;
+        cursor: pointer;
+    }
+
+        .btn.small {
+            padding: 3px 8px;
+        }
+
+    .link {
+        display: inline-block;
+        margin-top: 6px;
+    }
+</style>

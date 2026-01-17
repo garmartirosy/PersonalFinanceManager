@@ -1,0 +1,47 @@
+﻿@model Personal_Finance_Manager.ViewModels.CreateBudgetViewModel
+
+@{
+    ViewData["Title"] = "Create Budget";
+}
+
+<h2>Create Budget</h2>
+
+<form asp-action="CreateBudget" method="post">
+
+    <div>
+        <label>Name</label><br />
+        <input asp-for="Name" />
+    </div>
+
+    <br />
+
+    <div>
+        <label>Balance</label><br />
+        <input asp-for="Balance" />
+    </div>
+
+    <br />
+
+    <button type="submit" class="btn">Create</button>
+    <a asp-action="Index" class="link">Back</a>
+
+</form>
+
+<style>
+
+    input {
+        width: 250px;
+        padding: 4px;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        border: 1px solid #999;
+        background-color: #f2f2f2;
+        cursor: pointer;
+    }
+
+    .link {
+        margin-left: 8px;
+    }
+</style>

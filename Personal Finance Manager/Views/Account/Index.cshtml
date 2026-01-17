@@ -1,0 +1,99 @@
+﻿@model IEnumerable<Account>
+
+@if (TempData["DeleteResult"] is string msg)
+{
+    <div>@msg</div>
+}
+
+@if (TempData["Debug"] is string dbg)
+{
+    <div>@dbg</div>
+}
+
+@foreach (var acc in Model)
+{
+    if (!acc.IsActive) { continue; }
+
+    <a asp-controller="Transaction" asp-action="Index" asp-route-accountId="@acc.Id"
+       class="accLink">
+
+        <div class="accCard">
+
+            <h2>@acc.Name</h2>
+
+            <div class="row">
+                <span>Type: @acc.AccountType</span>
+            </div>
+
+            <div class="row">
+                <span> Balance: @acc.Balance.ToString("C")</span>
+            </div>
+
+            <div class="row">
+                <span>Created:@acc.DateCreated.ToString("MMMM dd, yyyy")</span>
+            </div>
+
+            <div onclick="event.stopPropagation();">
+
+                <a asp-controller="Account" asp-action="UpdateAccount" asp-route-accountId="@acc.Id"
+                   class="btn">
+                    Edit
+                </a>
+
+                <form asp-controller="Account" asp-action="DeleteAccount" asp-route-accountId="@acc.Id"
+                      method="post"
+                      style="display:inline;"
+                      onsubmit="event.stopPropagation();">
+
+                    <button type="submit" class="btn">
+                        Delete
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+    </a>
+}
+
+<div style="margin-bottom: 16px;">
+    <a asp-controller="Account"
+       asp-action="CreateAccount"
+       class="btn">
+        + Create Account
+    </a>
+</div>
+
+
+<style>
+    .accLink {
+        color: black;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    .accCard {
+        border: 1px solid #ccc;
+        padding: 12px;
+        width: 420px;
+        cursor: pointer;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 6px;
+    }
+
+
+    .btn {
+        border: 1px solid #999;
+        padding: 4px 10px;
+        background: #eee;
+        text-decoration: none;
+        cursor: pointer;
+        margin-right: 6px;
+        color: black;
+    }
+</style>

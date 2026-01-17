@@ -1,0 +1,40 @@
+﻿@model Personal_Finance_Manager.ViewModels.UpdateAccountViewModel
+
+@{
+    ViewData["Title"] = "Edit Account";
+}
+
+<h2>Edit Account</h2>
+
+<form asp-action="UpdateAccount" method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <div>
+        <label asp-for="Name"></label><br />
+        <input asp-for="Name" />
+    </div>
+
+    <br />
+
+    <div>
+        <label>Account Type</label><br />
+        <select asp-for="AccountTypeId">
+            <option value="1">Checking</option>
+            <option value="2">Savings</option>
+            <option value="3">Credit</option>
+        </select>
+    </div>
+
+    <br />
+
+    <div>
+        <label asp-for="Balance"></label><br />
+        <input asp-for="Balance" />
+    </div>
+
+    <br />
+
+    <button type="submit">Save</button>
+
+</form>

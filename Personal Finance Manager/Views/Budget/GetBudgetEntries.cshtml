@@ -1,0 +1,136 @@
+﻿@model Personal_Finance_Manager.ViewModels.BudgetEntryViewModel
+
+@{
+    ViewData["Title"] = "Budget Entries";
+}
+
+<h2>Budget Entries</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div style="color:red;">
+        @TempData["Error"]
+    </div>
+    <br />
+}
+
+<div>
+    <h4>@Model.Budget.Name</h4>
+
+    <div>
+        <strong>Balance:</strong>
+        @Model.Budget.Balance.ToString("N2")
+    </div>
+
+    <div>
+        <strong>Spent:</strong>
+
+        @if (Model.Budget.TotalSpent > Model.Budget.Balance)
+        {
+            <span style="color:red;">
+                @Model.Budget.TotalSpent.ToString("N2")
+                (over budget)
+            </span>
+        }
+        else
+        {
+            @Model.Budget.TotalSpent.ToString("N2")
+        }
+    </div>
+
+    <div>
+        <strong>Created:</strong>
+        @Model.Budget.DateCreated.ToString("yyyy-MM-dd")
+    </div>
+</div>
+
+<br />
+
+<a asp-action="CreateBudgetEntry"
+   asp-route-budgetId="@Model.Budget.Id"
+   class="btn">
+    Add Entry
+</a>
+
+<a asp-action="Index" class="link">
+    Back to Budgets
+</a>
+
+<br />
+<br />
+
+@if (Model.Entries == null || !Model.Entries.Any())
+{
+    <p>No entries found.</p>
+}
+else
+{
+    <table class="budgetTable">
+
+        <tr>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Action</th>
+        </tr>
+
+        @foreach (var e in Model.Entries)
+        {
+            <tr>
+                <td>@e.Name</td>
+                <td class="amount">@e.Amount.ToString("N2")</td>
+                <td>
+                    <form asp-action="DeleteBudgetEntry"
+                          method="post"
+                          onsubmit="return confirm('Delete this entry?');">
+
+                        <input type="hidden" name="budgetEntryId" value="@e.Id" />
+                        <input type="hidden" name="budgetId" value="@Model.Budget.Id" />
+
+                        <button type="submit" class="btn small">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+<style>
+
+    .budgetTable {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 600px;
+    }
+
+        .budgetTable th,
+        .budgetTable td {
+            border: 1px solid #ccc;
+            padding: 6px;
+        }
+
+        .budgetTable th {
+            background-color: #eee;
+            text-align: left;
+        }
+
+    .amount {
+        text-align: right;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        border: 1px solid #999;
+        background-color: #f2f2f2;
+        cursor: pointer;
+    }
+
+        .btn.small {
+            padding: 3px 8px;
+        }
+
+    .link {
+        margin-left: 8px;
+    }
+</style>

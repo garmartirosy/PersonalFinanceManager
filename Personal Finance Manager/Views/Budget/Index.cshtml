@@ -1,0 +1,121 @@
+﻿@model IEnumerable<Personal_Finance_Manager.Models.Budget>
+
+@{
+    ViewData["Title"] = "Budgets";
+}
+
+<h2>Budgets</h2>
+
+<a asp-action="CreateBudget" class="btn">
+    Create Budget
+</a>
+
+<br />
+<br />
+
+@if (TempData["Error"] != null)
+{
+    <div style="color:red;">
+        @TempData["Error"]
+    </div>
+    <br />
+}
+
+@if (Model == null || !Model.Any())
+{
+    <p>No budgets found.</p>
+}
+else
+{
+    <table class="budgetTable">
+
+        <tr>
+            <th>Name</th>
+            <th>Balance</th>
+            <th>Spent</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+
+        @foreach (var b in Model)
+        {
+            <tr>
+                <td>@b.Name</td>
+
+                <td class="amount">
+                    @b.Balance.ToString("N2")
+                </td>
+
+                <td class="amount">
+                    @if (b.TotalSpent > b.Balance)
+                    {
+                        <span style="color:red;">
+                            @b.TotalSpent.ToString("N2")<br />
+                            <small>Over budget</small>
+                        </span>
+                    }
+                    else
+                    {
+                        @b.TotalSpent.ToString("N2")
+                    }
+                </td>
+
+                <td>
+                    @b.DateCreated.ToString("yyyy-MM-dd")
+                </td>
+
+                <td>
+                    <a asp-action="GetBudgetEntries"
+                       asp-route-budgetId="@b.Id"
+                       class="btn small">
+                        View
+                    </a>
+
+                    <form asp-action="DeleteBudget"
+                          method="post"
+                          style="display:inline;"
+                          onsubmit="return confirm('Delete this budget and all entries?');">
+
+                        <input type="hidden" name="budgetId" value="@b.Id" />
+
+                        <button type="submit" class="btn small">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+<style>
+    .budgetTable {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 800px;
+    }
+
+        .budgetTable th,
+        .budgetTable td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left;
+        }
+
+
+    .amount {
+        text-align: right;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        border: 1px solid #999;
+        cursor: pointer;
+        text-decoration: none;
+        color: black;
+    }
+
+        .btn.small {
+            padding: 3px 8px;
+        }
+</style>

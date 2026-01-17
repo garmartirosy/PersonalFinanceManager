@@ -1,0 +1,30 @@
+﻿@model Personal_Finance_Manager.ViewModels.CreateAccountViewModel
+
+<form method="post" asp-action="CreateAccount">
+
+
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+    </div>
+
+    <div>
+        <label asp-for="AccountTypeId" ></label>
+        <select asp-for="AccountTypeId">
+            <option value="1">Checking</option>
+            <option value="2">Savings</option>
+            <option value="3">Credit</option>
+        </select>
+        <span asp-validation-for="AccountTypeId"></span>
+    </div>
+
+    <div>
+        <label asp-for="Balance"></label>
+        <input asp-for="Balance" />
+        <span asp-validation-for="Balance"></span>
+    </div>
+
+    <button type="submit">Create</button>
+
+</form>
